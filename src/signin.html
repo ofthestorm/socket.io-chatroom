@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>sign in</title>
+    <style>
+        input {
+            width: 50%;
+            border: solid 2px black;
+            height: 50px;
+            line-height: 50px;
+        }
+    </style>
+
+</head>
+<body>
+<div id="content">
+    <form style="margin-top:70px;" method="post" action="/signin">
+        <div class="form_line">
+            <div class="form_label">昵称：</div>
+            <input type="text" name="name" />
+        </div>
+        <div class="form_line">
+            <div class="form_label"></div>
+            <button class="button gray" type="submit">登录</button>
+            <button class="button gray" type="reset">取消</button>
+        </div>
+    </form>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+    <title>Socket.IO chat ~</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font: 13px Helvetica, Arial; }
+        form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+        form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+        form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+        #messages { list-style-type: none; margin: 0; padding: 0; }
+        #messages li { padding: 5px 10px; }
+        #messages li:nth-child(odd) { background: #eee; }
+    </style>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script>
+        $(function () {
+            var socket = io();
+
+            var from = $.cookie("name");//从 cookie 中读取用户名，存于变量 from
+            var to = 'all';
+            socket.emit('online', {user: from});
+
+
+            $('form').submit(function(){
+                var username = $.cookie("name");
+                console.log(username);
+                socket.emit('chat message', $('#m').val(), username);
+                $('#m').val('');
+                return false;
+            });
+            socket.on('chat message', function(msg){
+                $('#messages').append($('<li>').text(msg));
+            });
+
+//            var from = "~";
+//            from = $.cookie("name");//从 cookie 中读取用户名，存于变量 from
+//            var to = 'all';//设置默认接收对象为"所有人"
+            //发送用户上线信号
+//            socket.emit('online', {user: from});
+            socket.on('online', function (data) {
+//                console.log("online");
+                //显示系统消息
+                if (data.user != from) {
+                    $('#messages').append($('<li>').text(data.user+"log in"));
+//                    var sys = '<div style="color:#f00">系统(' + now() + '):' + '用户 ' + data.user + ' 上线了！</div>';
+                } else {
+                    $('#messages').append($('<li>').text("YOU log in"));
+
+//                    var sys = '<div style="color:#f00">系统(' + now() + '):你进入了聊天室！</div>';
+                }
+//                $("#contents").append(sys + "<br/>");
+                //刷新用户在线列表
+//                flushUsers(data.users);
+                //显示正在对谁说话
+//                showSayTo();
+            });
+
+            socket.on('offline', function (data) {
+                $('#messages').append($('<li>').text(data.user+"offline"));
+            })
+
+                var setCookie = function (cookieName, cookieValue) {
+                document.cookie = cookieName + "=" + cookieValue;
+            }
+            var getCookie = function (cookieName) {
+                var cookieString = document.cookie;
+                var start = cookieString.indexOf(cookieName + '=');
+                // 加上等号的原因是避免在某些 Cookie 的值里有
+                // 与 cookieName 一样的字符串。=
+                if (start == -1) // 找不到
+                    return null;
+                start += cookieName.length + 1;
+                var end = cookieString.indexOf(';', start);
+                if (end == -1) return unescape(cookieString.substring(start));
+                return unescape(cookieString.substring(start, end));
+            }
+            var getTime = function () {
+                return new Date().toDateString();
+            }
+        });
+    </script>
+</head>
+<body>
+<ul id="messages"></ul>
+<form action="">
+    <input id="m" autocomplete="off"/><button>Send</button>
+</form>
+</body>
+</html>
