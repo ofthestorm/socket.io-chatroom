@@ -16,7 +16,7 @@ var users = new Array();
 app.get('/', function (req, res) {
     // res.send('Hello World!');
     // res.sendFile(__dirname + '/src/index.html');
-    res.cookie("name", "hello");
+    // res.cookie("name", "hello");
 
     // console.log('Cookies: ', req.cookies);
     // console.log('Signed Cookies: ', req.signedCookies);
@@ -54,21 +54,23 @@ io.on('connection', function(socket){
     // console.log('connected');
     socket.on('disconnect', function(){
         console.log(socket.name+'disconnected');
-        if (users[socket.name]) {
+        if (users.indexOf(socket.name) != -1) {
             //从 users 对象中删除该用户名
-            //todo:socket.name --> undefined
+            //todo: socket.name --> hello 与数组中不一致
             delete users[socket.name];
+            console.log(users);
             //向其他所有用户广播该用户下线信息
             io.emit('offline', {users: users, user: socket.name});
         }
     });
     socket.on('chat message', function(msg, name){
         // console.log('message: ' + msg + name);
-        io.emit('chat message', msg); //广播
+        io.emit('chat message', msg, name); //广播
     });
     socket.on('online', function(data){
         console.log(data.user+"login");
         socket.name = data.user;
+        console.log("socket name:"+socket.name);
         io.emit('online', data);
     });
 });
