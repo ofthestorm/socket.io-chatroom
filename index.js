@@ -50,7 +50,7 @@ app.post('/signin', function (req, res) {
 
 io.on('connection', function(socket){
     // console.log('connected');
-    
+
     //https://stackoverflow.com/questions/40816355/socket-io-send-disconnect-event-with-parameter
     socket.on('disconnect', function(){
         // console.log(socket.name+' disconnected');
@@ -63,12 +63,10 @@ io.on('connection', function(socket){
     });
 
     socket.on('chat message', function(msg, name){
-        // console.log('message: ' + msg + name);
         io.emit('chat message', msg, name); //广播
     });
 
     socket.on('online', function(data){
-        // console.log(data.user+" login");
         socket.name = data.user;
         // console.log("socket name:"+socket.name);
         users.add(data.user);
