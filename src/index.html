@@ -64,7 +64,7 @@
 //                    }
 //                });
 //            };
-            //todo: turn to bottom automatically 
+            //todo: turn to bottom automatically
             var socket = io();
 
             var from = $.cookie("name");//从 cookie 中读取用户名，存于变量 from
@@ -83,25 +83,26 @@
                 if(name == $.cookie("name")) {
 //                    $('#messages').append($('<li class="message myMsg">').text(name + ":" + msg));
                     $('#messages').append("<li><div class=\"chat\">\n" +
-                        "    <div class=\"name\">\n" +
+                        "    <div class=\"nameRight\">\n" +
                         "        <p>" +
                         name +
                         "</p>\n" +
                         "    </div>\n" +
-                        "    <div class=\"chat-bubble chat-bubble-left\">\n" +
+                        "    <div class=\"chat-bubble chat-bubble-right\">\n" +
                         msg +
                         "    </div>\n" +
                         "</div></li>");
 
                 } else {
 //                    $('#messages').append($('<li class="message otherMsg">').text(name + ":" + msg));
+
                     $('#messages').append("<li><div class=\"chat\">\n" +
-                        "    <div class=\"nameRight\">\n" +
+                        "    <div class=\"name\">\n" +
                         "        <p>" +
-                            name +
+                        name +
                         "</p>\n" +
                         "    </div>\n" +
-                        "    <div class=\"chat-bubble chat-bubble-right\">\n" +
+                        "    <div class=\"chat-bubble chat-bubble-left\">\n" +
                         msg +
                         "    </div>\n" +
                         "</div></li>");
@@ -310,7 +311,7 @@
             margin-right: 10px;
             /*background-color: #CCCCCC;*/
             position: relative;
-            top: 10px;
+            top: 15px;
         }
         .nameRight {
             clear: both;
@@ -319,7 +320,7 @@
             margin-left: 10px;
             /*background-color: #CCCCCC;*/
             position: relative;
-            top: 10px;
+            top: 15px;
         }
         .weui-flex {
             clear: both;
