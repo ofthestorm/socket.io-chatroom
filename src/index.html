@@ -7,10 +7,11 @@
         body {
             font: 13px Helvetica, Arial;
             background-color: #EBEBEB;
+            /*height: 100%;*/
         }
         form {   position: fixed; bottom: 0; width: 100%; }
         /*form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }*/
-        #messages { list-style-type: none; margin: 0; padding: 0; }
+        #messages { list-style-type: none; margin: 0; padding: 0; margin-bottom: 50px}
         /*#messages li { padding: 5px 10px; }*/
         /*#messages li:nth-child(odd) { background: #eee; }*/
         .message {
@@ -51,6 +52,19 @@
 
     <script>
         $(function () {
+//            scrollBottomTest =function(){
+//                $("#messages").scroll(function(){
+//                    var $this =$(this),
+//                        viewH =$(this).height(),//可见高度
+//                        contentH =$(this).get(0).scrollHeight,//内容高度
+//                        scrollTop =$(this).scrollTop();//滚动高度
+//                    //if(contentH - viewH - scrollTop <= 100) { //到达底部100px时,加载新内容
+//                    if(scrollTop/(contentH -viewH)>=0.95){ //到达底部100px时,加载新内容
+//                        // 这里加载数据..
+//                    }
+//                });
+//            };
+            //todo: turn to bottom automatically 
             var socket = io();
 
             var from = $.cookie("name");//从 cookie 中读取用户名，存于变量 from
@@ -67,13 +81,33 @@
             });
             socket.on('chat message', function(msg, name){
                 if(name == $.cookie("name")) {
-                    $('#messages').append($('<li class="message myMsg">').text(name + ":" + msg));
-                    $('#messages').append("");
+//                    $('#messages').append($('<li class="message myMsg">').text(name + ":" + msg));
+                    $('#messages').append("<li><div class=\"chat\">\n" +
+                        "    <div class=\"name\">\n" +
+                        "        <p>" +
+                        name +
+                        "</p>\n" +
+                        "    </div>\n" +
+                        "    <div class=\"chat-bubble chat-bubble-left\">\n" +
+                        msg +
+                        "    </div>\n" +
+                        "</div></li>");
 
                 } else {
-                    $('#messages').append($('<li class="message otherMsg">').text(name + ":" + msg));
-
+//                    $('#messages').append($('<li class="message otherMsg">').text(name + ":" + msg));
+                    $('#messages').append("<li><div class=\"chat\">\n" +
+                        "    <div class=\"nameRight\">\n" +
+                        "        <p>" +
+                            name +
+                        "</p>\n" +
+                        "    </div>\n" +
+                        "    <div class=\"chat-bubble chat-bubble-right\">\n" +
+                        msg +
+                        "    </div>\n" +
+                        "</div></li>");
                 }
+                var div = $('#messages');
+                div.scrollTop = div.scrollHeight;
             });
 
 //            var from = "~";
@@ -179,6 +213,7 @@
             top: 0;
             text-align: center;
             color: white;
+            z-index:1;
         }
         .headbar p {
             line-height: 50px;
@@ -188,6 +223,7 @@
             margin-bottom: 50px;
         }
         .inform {
+            clear: both;
             width: 100%;
             height: 25px;
             background-color: rgba(119,130,141,0.2);
@@ -213,9 +249,11 @@
             border: 1px solid #CCCCCC;
             border-radius: 5px;
             max-width:180px;
+            min-height: 40px;
         }
 
         .chat-bubble-left {
+            /*clear: both;*/
             float: left;
 
         }
@@ -223,7 +261,7 @@
             content: '';
             position: absolute;
             width: 0;
-            height: 0;
+            height: 0px;
             left: -20px;
             top:5px;
             border: 10px solid;
@@ -249,7 +287,7 @@
             content: '';
             position: absolute;
             width: 0;
-            height: 0;
+            height: 0px;
             right: -20px;
             top:5px;
             border: 10px solid;
@@ -266,43 +304,45 @@
             border-color:transparent transparent transparent #A2E563 ;
         }
         .name {
+            clear: both;
             float: left;
+            margin-left: 2px;
             margin-right: 10px;
-            background-color: #CCCCCC;
+            /*background-color: #CCCCCC;*/
+            position: relative;
+            top: 10px;
         }
         .nameRight {
             clear: both;
             float: right;
+            margin-right: 2px;
             margin-left: 10px;
-            background-color: #CCCCCC;
-
+            /*background-color: #CCCCCC;*/
+            position: relative;
+            top: 10px;
         }
-
+        .weui-flex {
+            clear: both;
+        }
+        .body {
+            margin-bottom: 50px;
+            background-color: #A2E563;
+            z-index: 2;
+            /*height: 100%;*/
+            /*width: 100%;*/
+        }
     </style>
 </head>
 <body>
 <div class="headbar">
     <p>🐨 Socket.IO Chat Room 🐰</p>
 </div>
-<ul id="messages"></ul>
-<div class="chat">
-    <div class="name">
-        <p>aadeqgw4</p>
-    </div>
-    <div class="chat-bubble chat-bubble-left">
-        这是聊天左气泡这是聊天左气泡这是聊天左气泡这是聊天左气泡这是聊天左气泡这是聊天左气泡
-    </div>
-</div>
-<div class="chat">
-    <div class="nameRight">
-        <p>aadeqgw4</p>
-    </div>
-    <div class="chat-bubble chat-bubble-right">
-        这是聊天右气泡
-    </div>
+<!--<ul id="messages"></ul>-->
+<div id="messages"></div>
+
+<div class="body">
 
 </div>
-
 
 
 <!--<div class="weui-flex">-->
