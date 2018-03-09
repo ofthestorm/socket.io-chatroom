@@ -3,17 +3,25 @@
 <head>
     <title>Socket.IO chat ~</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; }
         body {
             font: 13px Helvetica, Arial;
             background-color: #EBEBEB;
-            /*height: 100%;*/
         }
-        form {   position: fixed; bottom: 0; width: 100%; }
-        /*form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }*/
-        #messages { list-style-type: none; margin: 0; padding: 0; margin-bottom: 50px}
-        /*#messages li { padding: 5px 10px; }*/
-        /*#messages li:nth-child(odd) { background: #eee; }*/
+        form {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            margin-bottom: 50px;
+        }
         .message {
             padding: 5px 10px;
         }
@@ -29,183 +37,6 @@
         .informMsg {
 
         }
-    </style>
-    <!-- head 中 -->
-    <link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.2/style/weui.min.css">
-    <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.0/css/jquery-weui.min.css">
-
-    <!-- body 最后 -->
-    <script src="https://cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
-    <script src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/jquery-weui.min.js"></script>
-
-    <!-- 如果使用了某些拓展插件还需要额外的JS -->
-    <script src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/swiper.min.js"></script>
-    <script src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/city-picker.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <!--<link rel="stylesheet" href="muse-ui/muse-ui.css">-->
-    <!--<script src="/muse-ui/muse-ui.js"></script>-->
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-
-    <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">-->
-    <!--<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">-->
-
-    <script>
-        $(function () {
-//            scrollBottomTest =function(){
-//                $("#messages").scroll(function(){
-//                    var $this =$(this),
-//                        viewH =$(this).height(),//可见高度
-//                        contentH =$(this).get(0).scrollHeight,//内容高度
-//                        scrollTop =$(this).scrollTop();//滚动高度
-//                    //if(contentH - viewH - scrollTop <= 100) { //到达底部100px时,加载新内容
-//                    if(scrollTop/(contentH -viewH)>=0.95){ //到达底部100px时,加载新内容
-//                        // 这里加载数据..
-//                    }
-//                });
-//            };
-            //todo: turn to bottom automatically
-            var socket = io();
-
-            var from = $.cookie("name");//从 cookie 中读取用户名，存于变量 from
-            var to = 'all';
-            socket.emit('online', {user: from});
-
-
-            $('form').submit(function(){
-                var username = $.cookie("name");
-                console.log(username);
-                socket.emit('chat message', $('#m').val(), username);
-                $('#m').val('');
-                return false;
-            });
-            socket.on('chat message', function(msg, name){
-                if(name == $.cookie("name")) {
-//                    $('#messages').append($('<li class="message myMsg">').text(name + ":" + msg));
-                    $('#messages').append("<li><div class=\"chat\">\n" +
-                        "    <div class=\"nameRight\">\n" +
-                        "        <p>" +
-                        name +
-                        "</p>\n" +
-                        "    </div>\n" +
-                        "    <div class=\"chat-bubble chat-bubble-right\">\n" +
-                        msg +
-                        "    </div>\n" +
-                        "</div></li>");
-
-                } else {
-//                    $('#messages').append($('<li class="message otherMsg">').text(name + ":" + msg));
-
-                    $('#messages').append("<li><div class=\"chat\">\n" +
-                        "    <div class=\"name\">\n" +
-                        "        <p>" +
-                        name +
-                        "</p>\n" +
-                        "    </div>\n" +
-                        "    <div class=\"chat-bubble chat-bubble-left\">\n" +
-                        msg +
-                        "    </div>\n" +
-                        "</div></li>");
-                }
-                var div = $('#messages');
-                div.scrollTop = div.scrollHeight;
-            });
-
-//            var from = "~";
-//            from = $.cookie("name");//从 cookie 中读取用户名，存于变量 from
-//            var to = 'all';//设置默认接收对象为"所有人"
-            //发送用户上线信号
-//            socket.emit('online', {user: from});
-            socket.on('online', function (data) {
-//                console.log("online");
-                //显示系统消息
-                if (data.user != from) {
-//                    $('#messages').append($('<li>').text(data.user+"log in"));
-//                    $('#messages').append($('<li class="informMsg">').text(data.user+"log in"));
-                    $('#messages').append("<div class=\"weui-flex\">\n" +
-                        "    <div class=\"weui-flex__item\"></div>\n" +
-                        "    <div class=\"weui-flex__item\">\n" +
-                        "        <div class=\"inform\">\n" +
-                        "            <p>" +
-                        data.user +
-                        " login</p>\n" +
-                        "        </div>\n" +
-                        "    </div>\n" +
-                        "    <div class=\"weui-flex__item\"></div>\n" +
-                        "</div>");
-
-                } else {
-//                    $('#messages').append($('<li class="informMsg">').text("YOU log in"));
-                    $('#messages').append("<div class=\"weui-flex\">\n" +
-                        "    <div class=\"weui-flex__item\"></div>\n" +
-                        "    <div class=\"weui-flex__item\">\n" +
-                        "        <div class=\"inform\">\n" +
-                        "            <p>You login</p>\n" +
-                        "        </div>\n" +
-                        "    </div>\n" +
-                        "    <div class=\"weui-flex__item\"></div>\n" +
-                        "</div>");
-                }
-
-//                for (let item of data.users) {
-//                    $('#messages').append($('<li>').text("users: "+ item));
-//                }
-
-//                console.log(data.users);
-//
-//                var users = Array.from(data.users);
-////                console.log(users);
-//
-//                for(let i = 0; i < users.length; i++) {
-//                    console.log("hello");
-//                    $('#messages').append($('<li>').text("users: "+ item));
-//                }
-
-
-//                $("#contents").append(sys + "<br/>");
-                //刷新用户在线列表
-//                flushUsers(data.users);
-                //显示正在对谁说话
-//                showSayTo();
-            });
-
-            socket.on('offline', function (data) {
-//                console.log(data.user);
-//                $('#messages').append($('<li>').text(data.user+" quit"));
-                $('#messages').append("<div class=\"weui-flex\">\n" +
-                    "    <div class=\"weui-flex__item\"></div>\n" +
-                    "    <div class=\"weui-flex__item\">\n" +
-                    "        <div class=\"inform\">\n" +
-                    "            <p>" +
-                    data.user +
-                    " quit</p>\n" +
-                    "        </div>\n" +
-                    "    </div>\n" +
-                    "    <div class=\"weui-flex__item\"></div>\n" +
-                    "</div>");
-            })
-
-            var setCookie = function (cookieName, cookieValue) {
-                document.cookie = cookieName + "=" + cookieValue;
-            }
-            var getCookie = function (cookieName) {
-                var cookieString = document.cookie;
-                var start = cookieString.indexOf(cookieName + '=');
-                // 加上等号的原因是避免在某些 Cookie 的值里有
-                // 与 cookieName 一样的字符串。=
-                if (start == -1) // 找不到
-                    return null;
-                start += cookieName.length + 1;
-                var end = cookieString.indexOf(';', start);
-                if (end == -1) return unescape(cookieString.substring(start));
-                return unescape(cookieString.substring(start, end));
-            }
-            var getTime = function () {
-                return new Date().toDateString();
-            }
-        });
-    </script>
-    <style>
         .headbar {
             width: 100%;
             height: 50px;
@@ -254,7 +85,6 @@
         }
 
         .chat-bubble-left {
-            /*clear: both;*/
             float: left;
 
         }
@@ -280,7 +110,6 @@
         }
 
         .chat-bubble-right {
-            /*clear: both;*/
             float: right;
             background-color: #A2E563;
         }
@@ -309,7 +138,6 @@
             float: left;
             margin-left: 2px;
             margin-right: 10px;
-            /*background-color: #CCCCCC;*/
             position: relative;
             top: 15px;
         }
@@ -318,51 +146,28 @@
             float: right;
             margin-right: 2px;
             margin-left: 10px;
-            /*background-color: #CCCCCC;*/
             position: relative;
             top: 15px;
         }
         .weui-flex {
             clear: both;
         }
-        .body {
-            margin-bottom: 50px;
-            background-color: #A2E563;
-            z-index: 2;
-            /*height: 100%;*/
-            /*width: 100%;*/
-        }
     </style>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.2/style/weui.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.0/css/jquery-weui.min.css">
+
+
+
 </head>
 <body>
 <div class="headbar">
     <p>🐨 Socket.IO Chat Room 🐰</p>
 </div>
-<!--<ul id="messages"></ul>-->
 <div id="messages"></div>
-
-<div class="body">
-
-</div>
-
-
-<!--<div class="weui-flex">-->
-    <!--<div class="weui-flex__item"></div>-->
-    <!--<div class="weui-flex__item">-->
-        <!--<div class="inform">-->
-            <!--<p>huwef login</p>-->
-        <!--</div>-->
-    <!--</div>-->
-    <!--<div class="weui-flex__item"></div>-->
-<!--</div>-->
-
 
 <form action="">
     <div class="weui-cells weui-cells_form">
         <div class="weui-cell weui-cell_vcode">
-            <!--<div class="weui-cell__hd">-->
-            <!--<label class="weui-label">手机号</label>-->
-            <!--</div>-->
             <div class="weui-cell__bd">
                 <input class="weui-input" type="tel" id="m" placeholder="Input...">
             </div>
@@ -373,7 +178,108 @@
     </div>
 </form>
 
+<script src="https://cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/jquery-weui.min.js"></script>
+
+<script src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/swiper.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/city-picker.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
+<script>
+    $(function () {
+
+        //todo: turn to bottom automatically
+        var socket = io();
+
+        var from = $.cookie("name");
+        var to = 'all';
+        socket.emit('online', {user: from});
 
 
+        $('form').submit(function(){
+            var username = $.cookie("name");
+            console.log(username);
+            socket.emit('chat message', $('#m').val(), username);
+            $('#m').val('');
+            return false;
+        });
+        socket.on('chat message', function(msg, name){
+            if(name == $.cookie("name")) {
+                $('#messages').append("<li><div class=\"chat\">\n" +
+                    "    <div class=\"nameRight\">\n" +
+                    "        <p>" +
+                    name +
+                    "</p>\n" +
+                    "    </div>\n" +
+                    "    <div class=\"chat-bubble chat-bubble-right\">\n" +
+                    msg +
+                    "    </div>\n" +
+                    "</div></li>");
+
+            } else {
+
+                $('#messages').append("<li><div class=\"chat\">\n" +
+                    "    <div class=\"name\">\n" +
+                    "        <p>" +
+                    name +
+                    "</p>\n" +
+                    "    </div>\n" +
+                    "    <div class=\"chat-bubble chat-bubble-left\">\n" +
+                    msg +
+                    "    </div>\n" +
+                    "</div></li>");
+            }
+            var div = $('#messages');
+            div.scrollTop = div.scrollHeight;
+        });
+
+        socket.on('online', function (data) {
+            if (data.user != from) {
+                $('#messages').append("<div class=\"weui-flex\">\n" +
+                    "    <div class=\"weui-flex__item\"></div>\n" +
+                    "    <div class=\"weui-flex__item\">\n" +
+                    "        <div class=\"inform\">\n" +
+                    "            <p>" +
+                    data.user +
+                    " login</p>\n" +
+                    "        </div>\n" +
+                    "    </div>\n" +
+                    "    <div class=\"weui-flex__item\"></div>\n" +
+                    "</div>");
+
+            } else {
+                $('#messages').append("<div class=\"weui-flex\">\n" +
+                    "    <div class=\"weui-flex__item\"></div>\n" +
+                    "    <div class=\"weui-flex__item\">\n" +
+                    "        <div class=\"inform\">\n" +
+                    "            <p>You login</p>\n" +
+                    "        </div>\n" +
+                    "    </div>\n" +
+                    "    <div class=\"weui-flex__item\"></div>\n" +
+                    "</div>");
+            }
+        });
+
+        socket.on('offline', function (data) {
+            $('#messages').append("<div class=\"weui-flex\">\n" +
+                "    <div class=\"weui-flex__item\"></div>\n" +
+                "    <div class=\"weui-flex__item\">\n" +
+                "        <div class=\"inform\">\n" +
+                "            <p>" +
+                data.user +
+                " quit</p>\n" +
+                "        </div>\n" +
+                "    </div>\n" +
+                "    <div class=\"weui-flex__item\"></div>\n" +
+                "</div>");
+        })
+        var getTime = function () {
+            return new Date().toDateString();
+        }
+    });
+
+</script>
 </body>
 </html>
