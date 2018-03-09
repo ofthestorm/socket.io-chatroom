@@ -39,7 +39,7 @@ app.post('/signin', function (req, res) {
     if (users.has(req.body.name)) {
         res.redirect('/signin');
     } else {
-        res.cookie('name', req.body.name, {domain: 'localhost',maxAge: 1000*60*60*24*30});
+        res.cookie('name', req.body.name, {maxAge: 1000*60*60*24*30});
         users.add(req.body.name);
         allUsers.add(req.body.name)
         res.redirect('/');
@@ -73,6 +73,7 @@ io.on('connection', function(socket){
     });
 });
 
+//todo: 部署时把端口改掉
 http.listen(3000, function () {
     console.log('Listening on port 3000');
 });

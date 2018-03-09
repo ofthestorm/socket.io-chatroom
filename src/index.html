@@ -53,6 +53,7 @@
         #messages {
             margin-top: 50px;
             margin-bottom: 50px;
+            overflow: auto;
         }
         .inform {
             clear: both;
@@ -152,6 +153,8 @@
         .weui-flex {
             clear: both;
         }
+        .content {
+        }
     </style>
     <link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.2/style/weui.min.css">
     <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.0/css/jquery-weui.min.css">
@@ -163,7 +166,11 @@
 <div class="headbar">
     <p>🐨 Socket.IO Chat Room 🐰</p>
 </div>
-<div id="messages"></div>
+<div class="content">
+    <div id="messages"></div>
+    <a id="end" ></a>
+</div>
+
 
 <form action="">
     <div class="weui-cells weui-cells_form">
@@ -190,13 +197,11 @@
 <script>
     $(function () {
 
-        //todo: turn to bottom automatically
         var socket = io();
 
         var from = $.cookie("name");
         var to = 'all';
         socket.emit('online', {user: from});
-
 
         $('form').submit(function(){
             var username = $.cookie("name");
@@ -205,9 +210,10 @@
             $('#m').val('');
             return false;
         });
+
         socket.on('chat message', function(msg, name){
             if(name == $.cookie("name")) {
-                $('#messages').append("<li><div class=\"chat\">\n" +
+                $('#messages').append("<div class=\"chat\">\n" +
                     "    <div class=\"nameRight\">\n" +
                     "        <p>" +
                     name +
@@ -216,11 +222,11 @@
                     "    <div class=\"chat-bubble chat-bubble-right\">\n" +
                     msg +
                     "    </div>\n" +
-                    "</div></li>");
+                    "</div>");
 
             } else {
 
-                $('#messages').append("<li><div class=\"chat\">\n" +
+                $('#messages').append("<div class=\"chat\">\n" +
                     "    <div class=\"name\">\n" +
                     "        <p>" +
                     name +
@@ -229,10 +235,11 @@
                     "    <div class=\"chat-bubble chat-bubble-left\">\n" +
                     msg +
                     "    </div>\n" +
-                    "</div></li>");
+                    "</div>");
             }
-            var div = $('#messages');
-            div.scrollTop = div.scrollHeight;
+            //todo: turn to bottom automatically --> set an anchor and scrollIntoView()
+
+            document.getElementById("end").scrollIntoView();
         });
 
         socket.on('online', function (data) {
@@ -260,6 +267,8 @@
                     "    <div class=\"weui-flex__item\"></div>\n" +
                     "</div>");
             }
+            document.getElementById("end").scrollIntoView();
+
         });
 
         socket.on('offline', function (data) {
@@ -274,10 +283,10 @@
                 "    </div>\n" +
                 "    <div class=\"weui-flex__item\"></div>\n" +
                 "</div>");
+            document.getElementById("end").scrollIntoView();
+
         })
-        var getTime = function () {
-            return new Date().toDateString();
-        }
+
     });
 
 </script>
