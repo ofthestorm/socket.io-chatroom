@@ -1,1 +1,1 @@
-[Live demo](cloud.gladtomeet.me:3001)
+[Live demo](http://cloud.gladtomeet.me:3001)
